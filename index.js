@@ -47,7 +47,7 @@ async function run() {
     })
     app.get('/myservices/:email', async(req, res) => {
         const userEmailFromParams = req.params.email;
-        const query = { userEmail: userEmailFromParams };
+        const query = { providerEmail: userEmailFromParams };
         const result = await servicesCollection.find(query).toArray();
         
         res.send(result);
