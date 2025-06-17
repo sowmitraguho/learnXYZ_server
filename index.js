@@ -31,7 +31,7 @@ async function run() {
     const bookedServiceCollection = client.db('Education_Services').collection('bookedServices');
 
     app.get('/bookedServices', async(req, res) => {
-        const result = await bookedServiceCollection.find().toArray;
+        const result = await bookedServiceCollection.find().toArray();
         console.log('result', result);
         res.send(result);
     })
