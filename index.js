@@ -4,9 +4,36 @@ require('dotenv').config()
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 3000;
+const admin = require("firebase-admin");
+
+admin.initializeApp({
+  credential: admin.credential.cert(require("./firebase-service-account.json"))
+});
 
 app.use(cors());
 app.use(express.json());
+
+// Create a middleware to verify token:
+
+const verifyFirebaseToken = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  const idToken = authHeader.split("Bearer ")[1];
+
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    req.user = decodedToken;
+    next();
+  } catch (error) {
+    console.error("Token verification error:", error);
+    return res.status(403).json({ error: "Forbidden" });
+  }
+};
+
 
 // MongoDb Codes
 
@@ -21,6 +48,8 @@ const client = new MongoClient(uri, {
     deprecationErrors: true,
   }
 });
+
+
 
 async function run() {
   try {
@@ -56,13 +85,13 @@ async function run() {
       const result = await servicesCollection.findOne(query);
       res.send(result);
     })
-    app.get('/myservices/:email', async (req, res) => {
+    app.get('/myservices/:email', verifyFirebaseToken, async (req, res) => {
       const userEmailFromParams = req.params.email;
       const query = { providerEmail: userEmailFromParams };
       const result = await servicesCollection.find(query).toArray();
       res.send(result);
     })
-    app.get('/bookedservices/:email', async (req, res) => {
+    app.get('/bookedservices/:email', verifyFirebaseToken, async (req, res) => {
       const providerEmailFromParams = req.params.email;
       const query = { studentEmail: providerEmailFromParams };
       const result = await bookedServiceCollection.find(query).toArray();
@@ -81,7 +110,7 @@ async function run() {
       console.log('result', result);
       res.send(result);
     })
-    app.get('/servicestodo/:email', async (req, res) => {
+    app.get('/servicestodo/:email', verifyFirebaseToken, async (req, res) => {
       const providerEmailFromParams = req.params.email;
       const query = { providerEmail: providerEmailFromParams };
       const result = await bookedServiceCollection.find(query).toArray();
