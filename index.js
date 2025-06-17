@@ -28,12 +28,14 @@ async function run() {
     await client.connect();
 
     const servicesCollection = client.db('Education_Services').collection('AllServices');
-    // const usersCollection = client.db('groupsdb').collection('users');
+    const bookedServiceCollection = client.db('Education_Services').collection('bookedServices');
 
-    // app.get('/users', async(req, res) => {
-    //     const result = await usersCollection.find().toArray();
-    //     res.send(result);
-    // })
+    app.post('/bookedServices', async(req, res) => {
+        const newBookedService = req.body;
+        const result = await bookedServiceCollection.insertOne(newBookedService);
+        console.log('result', result);
+        res.send(result);
+    })
     app.get('/allservices', async(req, res) => {
         const result = await servicesCollection.find().toArray();
         console.log(result);
