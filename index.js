@@ -56,10 +56,15 @@ async function run() {
         const userEmailFromParams = req.params.email;
         const query = { providerEmail: userEmailFromParams };
         const result = await servicesCollection.find(query).toArray();
-        
         res.send(result);
     })
-
+    app.get('/bookedServices/:email', async(req, res) => {
+        const providerEmailFromParams = req.params.email;
+        const query = { providerEmail: providerEmailFromParams };
+        const result = await bookedServiceCollection.find(query).toArray();
+        console.log('result', result);
+        res.send(result);
+    })
     app.post('/services', async(req, res)=>{
         const newService = req.body;
         const result = await servicesCollection.insertOne(newService);
