@@ -69,6 +69,18 @@ async function run() {
       console.log('result', result);
       res.send(result);
     })
+    app.put('/bookedservices/:email', async (req, res) => {
+      const studentEmailFromParams = req.params.email;
+      const query = { studentEmail: studentEmailFromParams };
+      const options = { upsert: true };
+      const updatedData = req.body;
+      const updateDoc = {
+        $set: updatedData
+      }
+      const result = await bookedServiceCollection.updateOne(query, updateDoc, options);
+      console.log('result', result);
+      res.send(result);
+    })
     app.get('/servicestodo/:email', async (req, res) => {
       const providerEmailFromParams = req.params.email;
       const query = { providerEmail: providerEmailFromParams };
