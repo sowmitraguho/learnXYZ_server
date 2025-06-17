@@ -62,9 +62,9 @@ async function run() {
       const result = await servicesCollection.find(query).toArray();
       res.send(result);
     })
-    app.get('/bookedServices/:email', async (req, res) => {
+    app.get('/bookedservices/:email', async (req, res) => {
       const providerEmailFromParams = req.params.email;
-      const query = { providerEmail: providerEmailFromParams };
+      const query = { studentEmail: providerEmailFromParams };
       const result = await bookedServiceCollection.find(query).toArray();
       console.log('result', result);
       res.send(result);
