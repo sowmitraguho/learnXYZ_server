@@ -58,6 +58,7 @@ async function run() {
 
     const servicesCollection = client.db('Education_Services').collection('AllServices');
     const bookedServiceCollection = client.db('Education_Services').collection('bookedServices');
+    const usersDataCollection = client.db('Education_Services').collection('usersData');
 
     app.get('/bookedServices', async (req, res) => {
       try {
@@ -76,7 +77,7 @@ async function run() {
     })
     app.post('/user', async (req, res) => {
       const newUser = req.body;
-      const result = await bookedServiceCollection.insertOne(newUser);
+      const result = await usersDataCollection.insertOne(newUser);
       console.log('result', result);
       res.send(result);
     })
