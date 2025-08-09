@@ -74,6 +74,12 @@ async function run() {
       console.log('result', result);
       res.send(result);
     })
+    app.post('/user', async (req, res) => {
+      const newUser = req.body;
+      const result = await bookedServiceCollection.insertOne(newUser);
+      console.log('result', result);
+      res.send(result);
+    })
     app.get('/allservices', async (req, res) => {
       const result = await servicesCollection.find().toArray();
       console.log(result);
