@@ -39,7 +39,6 @@ const verifyFirebaseToken = async (req, res, next) => {
 
 
 // MongoDb Codes
-
 const uri = process.env.MongodbURI;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -84,6 +83,11 @@ async function run() {
       res.send(result);
     })
     app.get('/allusers', async (req, res) => {
+      const result = await usersDataCollection.find().toArray();
+      console.log(result);
+      res.send(result);
+    })
+    app.get('/user/:email', async (req, res) => {
       const result = await usersDataCollection.find().toArray();
       console.log(result);
       res.send(result);
