@@ -6,9 +6,12 @@ const app = express();
 const port = process.env.PORT || 3000;
 const admin = require("firebase-admin");
 
+const serviceAccount = JSON.parse(process.env.FIREBASE_CONFIG);
+
 admin.initializeApp({
-  credential: admin.credential.cert(require("./firebase-service-account.json"))
+  credential: admin.credential.cert(serviceAccount)
 });
+
 
 app.use(cors());
 app.use(express.json());
@@ -36,7 +39,6 @@ const verifyFirebaseToken = async (req, res, next) => {
 
 
 // MongoDb Codes
-
 
 const uri = process.env.MongodbURI;
 
@@ -82,7 +84,7 @@ async function run() {
       res.send(result);
     })
     app.get('/allusers', async (req, res) => {
-      const result = await servicesCollection.find().toArray();
+      const result = await usersDataCollection.find().toArray();
       console.log(result);
       res.send(result);
     })
