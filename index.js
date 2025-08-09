@@ -81,6 +81,11 @@ async function run() {
       console.log('result', result);
       res.send(result);
     })
+    app.get('/allusers', async (req, res) => {
+      const result = await servicesCollection.find().toArray();
+      console.log(result);
+      res.send(result);
+    })
     app.get('/allservices', async (req, res) => {
       const result = await servicesCollection.find().toArray();
       console.log(result);
