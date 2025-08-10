@@ -82,13 +82,26 @@ async function run() {
       console.log('result', result);
       res.send(result);
     })
+    app.put('/user/:email', async (req, res) => {
+      const email = req.params.email;
+      const updatedData = req.body;
+      const query = { email };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: updatedData
+      }
+      const result = await usersDataCollection.updateOne(query, updateDoc, options);
+      console.log('result', result);
+      res.send(result);
+    })
     app.get('/allusers', async (req, res) => {
       const result = await usersDataCollection.find().toArray();
       console.log(result);
       res.send(result);
     })
     app.get('/user/:email', async (req, res) => {
-      const result = await usersDataCollection.find().toArray();
+      const email = req.params.email;
+      const result = await usersDataCollection.findOne({ email });
       console.log(result);
       res.send(result);
     })
