@@ -126,13 +126,13 @@ async function run() {
       const result = await servicesCollection.findOne(query);
       res.send(result);
     })
-    app.get('/myservices/:email', verifyFirebaseToken, async (req, res) => {
+    app.get('/myservices/:email',  async (req, res) => {
       const userEmailFromParams = req.params.email;
       const query = { providerEmail: userEmailFromParams };
       const result = await servicesCollection.find(query).toArray();
       res.send(result);
     })
-    app.get('/bookedservices/:email', verifyFirebaseToken, async (req, res) => {
+    app.get('/bookedservices/:email',  async (req, res) => {
       const providerEmailFromParams = req.params.email;
       const query = { studentEmail: providerEmailFromParams };
       const result = await bookedServiceCollection.find(query).toArray();
@@ -151,7 +151,7 @@ async function run() {
       console.log('result', result);
       res.send(result);
     })
-    app.get('/servicestodo/:email', verifyFirebaseToken, async (req, res) => {
+    app.get('/servicestodo/:email',  async (req, res) => {
       const providerEmailFromParams = req.params.email;
       const query = { providerEmail: providerEmailFromParams };
       const result = await bookedServiceCollection.find(query).toArray();
