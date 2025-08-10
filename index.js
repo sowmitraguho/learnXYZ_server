@@ -83,17 +83,27 @@ async function run() {
       res.send(result);
     })
     app.put('/user/:email', async (req, res) => {
-      const email = req.params.email;
-      const updatedData = req.body;
-      const query = { email };
-      const options = { upsert: true };
-      const updateDoc = {
-        $set: updatedData
-      }
-      const result = await usersDataCollection.updateOne(query, updateDoc, options);
-      console.log('result', result);
-      res.send(result);
-    })
+  const email = req.params.email;
+  const updatedData = req.body;
+  const query = { email };
+  const options = { upsert: true };
+
+  // Check if updatedData contains MongoDB operators (like $inc)
+  const containsOperator = Object.keys(updatedData).some(key => key.startsWith('$'));
+
+  // Use updatedData as-is if contains operators, else wrap in $set
+  const updateDoc = containsOperator ? updatedData : { $set: updatedData };
+
+  try {
+    const result = await usersDataCollection.updateOne(query, updateDoc, options);
+    console.log('result', result);
+    res.send(result);
+  } catch (error) {
+    console.error('Update error:', error);
+    res.status(500).send({ error: 'Failed to update user data' });
+  }
+});
+
     app.get('/allusers', async (req, res) => {
       const result = await usersDataCollection.find().toArray();
       console.log(result);
